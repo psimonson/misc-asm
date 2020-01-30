@@ -1,5 +1,15 @@
-; simple command shell for MS-DOS and dosbox
+; ==================================================================
+; Simple command shell for MS-DOS and dosbox.
+; Exercises below, greater the number the harder to exercise.
+; ==================================================================
+;  1. Implement exit command.
+;  2. Implement version command.
+;  3. Add clear screen command, also clear screen for shell.
+;  4. Make text type out for version info.
+; ==================================================================
 ; by 5n4k3
+; ==================================================================
+
 [bits 16]
 [org 100h]
 [section .bss]
