@@ -1,0 +1,14 @@
+=================================================
+=           Miscellaneous Assembler             =
+=================================================
+fun.asm - Simple DOS interrupt example for string
+          printing.
+
+fun2.asm - Simple BIOS interrupt example for
+           string printing like fun.asm.
+
+fun3.asm - Simple BIOS printing and hex con-
+           version into string.
+=================================================
+=            by Philip R. Simonson              =
+=================================================
