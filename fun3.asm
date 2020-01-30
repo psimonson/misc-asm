@@ -34,8 +34,11 @@ print:
 	ret
 
 hex_to_string:
-	mov di, hex_string
+	mov di, hex_string+8
+	mov cx, 0008h
 .loop:
+	cmp cx, 0
+	je .done
 	cmp ax, 0
 	je .done
 	xor dx, dx
@@ -47,16 +50,16 @@ hex_to_string:
 	xor ax, ax
 	add dx, 48
 	mov ax, dx
-	stosb
-	inc di
+	mov byte [di], al
+	dec di
 	pop ax
 	jmp short .loop
 .other:
 	xor ax, ax
 	add dx, 55
 	mov ax, dx
-	stosb
-	inc di
+	mov byte [di], al
+	dec di
 	pop ax
 	jmp short .loop
 .done:
