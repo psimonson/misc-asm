@@ -15,6 +15,9 @@ fun2.asm - Simple BIOS interrupt example for
 
 fun3.asm - Simple BIOS printing and hex con-
            version into string.
+
+fun4.asm - Simple implementation of a very basic
+           shell program (like command.com).
 =================================================
 =            by Philip R. Simonson              =
 =================================================
