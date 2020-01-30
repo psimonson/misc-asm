@@ -18,6 +18,8 @@ fun3.asm - Simple BIOS printing and hex con-
 
 fun4.asm - Simple implementation of a very basic
            shell program (like command.com).
+
+fun5.asm - Simple way to clear the entire screen.
 =================================================
 =            by Philip R. Simonson              =
 =================================================
