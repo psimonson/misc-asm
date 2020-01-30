@@ -42,13 +42,14 @@ cmp_str:
 .loop:
 	lodsb
 	mov bl, byte [di]
-	inc di
 	cmp al, bl
-	je .loop
-	cmp al, 24h
+	jne .fail
+	cmp byte [di], 24h
 	je .done
+	inc di
+	jmp short .loop
+.fail:
 	stc
-	ret
 .done:
 	ret
 
@@ -57,12 +58,33 @@ get_str:
 .loop:
 	xor ax, ax
 	int 16h
+	cmp al, 08h
+	je .back
 	cmp al, 0dh
 	je .done
 	mov ah, 0eh
 	mov bx, 7
 	int 10h
 	stosb
+	jmp short .loop
+.back:
+	mov ah, 0eh
+	mov al, 08h
+	mov bx, 0007h
+	mov cx, 0001h
+	int 10h
+	mov ah, 0eh
+	mov al, 20h
+	mov bx, 0007h
+	mov cx, 0001h
+	int 10h
+	mov ah, 0eh
+	mov al, 08h
+	mov bx, 0007h
+	mov cx, 0001h
+	int 10h
+	dec di
+	mov byte [di], 24h
 	jmp short .loop
 .done:
 	mov al, 24h
