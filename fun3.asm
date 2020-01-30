@@ -18,6 +18,12 @@ _start:
 	call print
 	mov ax, 00ffh
 	call hex_to_string
+	mov ax, 0ffffh
+	call hex_to_string
+	mov ax, 0fffh
+	call hex_to_string
+	mov ax, 0123fh
+	call hex_to_string
 	int 20h
 
 print:
@@ -65,4 +71,16 @@ hex_to_string:
 .done:
 	mov dx, hex_string	; copy offset of hex_string to dx
 	call print			; call print sub routine
+	call clear_hex		; clear hex_string back to normal
 	ret					; return to previous code
+
+clear_hex:
+	mov di, hex_string
+	mov cx, 8
+.loop:
+	mov al, 48
+	stosb
+	dec cx
+	cmp cx, 0
+	jg .loop
+	ret
