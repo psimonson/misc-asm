@@ -1,6 +1,12 @@
 =================================================
 =           Miscellaneous Assembler             =
 =================================================
+To assemble for MS-DOS or dosbox.
+# nasm -f bin -o prog.com prog.asm
+=================================================
+NOTE: Where "prog" is is the name of the source
+file (e.g. fun, fun2, fun3, etc.).
+=================================================
 fun.asm - Simple DOS interrupt example for string
           printing.
 
