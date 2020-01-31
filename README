@@ -22,6 +22,10 @@ fun4.asm - Simple implementation of a very basic
 fun5.asm - Simple way to clear the entire screen.
 
 fun6.asm - Simple wait timer and beep function.
+
+fun7.asm - Simple example of something "cool",
+           with timer and beep functions created
+           in fun6.asm.
 =================================================
 =            by Philip R. Simonson              =
 =================================================
