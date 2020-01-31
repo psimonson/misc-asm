@@ -14,8 +14,8 @@ int process(FILE *fin)
 	errno = 0;
 	if(c != EOF)
 		printf("virii_msg:\n\tdb %xh", c);
-	for(i = 0; (c = fgetc(fin)) != EOF && errno == 0; i++) {
-		if(i > 0 && (i % 8) == 0) {
+	for(i = 1; (c = fgetc(fin)) != EOF && errno == 0; i++) {
+		if((i % 8) == 0) {
 			printf("\n\tdb %s%xh", (c < 16 ? "0" : ""), c);
 		} else if(c == '\n') {
 			printf(", 0%xh, 0%xh", '\r', '\n');
