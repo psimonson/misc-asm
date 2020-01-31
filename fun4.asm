@@ -1,11 +1,16 @@
 ; ==================================================================
 ; Simple command shell for MS-DOS and dosbox.
+; Below are currently implemented for you.
+; ==================================================================
+;  1. Exit command.
+;  2. Reboot command.
+;  3. Help command.
+; ==================================================================
 ; Exercises below, greater the number the harder to exercise.
 ; ==================================================================
-;  1. Implement exit command.
-;  2. Implement version command.
-;  3. Add clear screen command, also clear screen for shell.
-;  4. Make text type out for version info.
+;  1. Implement version command.
+;  2. Add clear screen command, also clear screen for shell.
+;  3. Make text type out for version info (like typewriters do).
 ; ==================================================================
 ; by 5n4k3
 ; ==================================================================
@@ -19,18 +24,31 @@ global _start
 jmp _start
 
 ; =========================== Data Section =========================
+
 reboot_msg db "Press any key to reboot . . .",0dh,0ah,24h
-help_msg db "Help [None yet]",0dh,0ah,24h
+help_msg:
+         db "========================================",0dh,0ah
+         db "=            *** Help ***              =",0dh,0ah
+         db "========================================",0dh,0ah
+         db "help     - This text is help.",0dh,0ah
+         db "reboot   - Warm reboot the machine.",0dh,0ah
+         db "exit     - Exit back to DOS.",0dh,0ah
+         db "========================================",0dh,0ah,24h
 help_cmd db "help",24h
 reboot_cmd db "reboot",24h
+exit_cmd db "exit",24h
+bad_cmd db "Bad command.",0dh,0ah,24h
 prompt db "> ",24h
 crlf_msg db 0dh,0ah,24h
+
 ; ==================================================================
 
 _start:
 	call shell
 	; return from COM file if reboot doesn't occur
 	int 20h
+
+; ============================ Subroutines =========================
 
 ; put message in dx
 print:
@@ -128,6 +146,12 @@ shell:
 	mov di, reboot_cmd
 	call cmp_str
 	jnc .reboot
+	mov si, buffer
+	mov di, exit_cmd
+	call cmp_str
+	jnc .exit
+	mov dx, bad_cmd
+	call print
 	jmp short shell
 .help:
 	mov dx, help_msg
@@ -143,4 +167,5 @@ shell:
 	push 0ffffh
 	push 0000h
 	retf
-
+.exit:
+	ret
