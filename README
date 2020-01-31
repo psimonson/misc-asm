@@ -26,6 +26,11 @@ fun6.asm - Simple wait timer and beep function.
 fun7.asm - Simple example of something "cool",
            with timer and beep functions created
            in fun6.asm.
+
+fun8.asm - Simple example of a fake virus, kind
+           of funny actually. But lets you know
+           immediately that it's fake NOT a real
+           virus.
 =================================================
 =            by Philip R. Simonson              =
 =================================================
