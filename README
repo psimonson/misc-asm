@@ -20,6 +20,8 @@ fun4.asm - Simple implementation of a very basic
            shell program (like command.com).
 
 fun5.asm - Simple way to clear the entire screen.
+
+fun6.asm - Simple wait timer and beep function.
 =================================================
 =            by Philip R. Simonson              =
 =================================================
