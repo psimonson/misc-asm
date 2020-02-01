@@ -23,6 +23,9 @@ exit_cmd db "exit",24h
 bad_cmd db "Bad command.",0dh,0ah,24h
 prompt db "> ",24h
 crlf_msg db 0dh,0ah,24h
+color db 1eh
+xpos db 0
+ypos db 0
 
 ; ==================================================================
 
@@ -40,6 +43,23 @@ _start:
 
 ; ============================ Subroutines =========================
 
+; put char in al
+putc:
+	mov ah, 09h
+	mov bx, 0000h
+	or bl, byte [color]
+	mov cx, 0001h
+	int 10h
+	ret
+
+mvcur:
+	mov ah, 02h
+	mov bh, 00h
+	mov dh, byte [ypos]
+	mov dl, byte [xpos]
+	int 10h
+	ret
+
 ; put message in dx
 print:
 	mov si, dx
@@ -47,9 +67,21 @@ print:
 	lodsb
 	cmp al, 24h
 	je .done
-	mov ah, 0eh
-	mov bx, 0007h
-	int 10h
+	cmp al, 0ah
+	je .cr
+	cmp al, 0dh
+	je .lf
+	call putc
+	inc byte [xpos]
+	call mvcur
+	jmp short .loop
+.cr:
+	mov byte [xpos], 0
+	call mvcur
+	jmp short .loop
+.lf:
+	inc byte [ypos]
+	call mvcur
 	jmp short .loop
 .done:
 	ret
