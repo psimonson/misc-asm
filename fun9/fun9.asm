@@ -31,7 +31,6 @@ xpos db 0			; for mvcur
 ypos db 0			; for mvcur
 xpos2 db 0			; for scrolling
 ypos2 db 0			; for scrolling
-curln db 0			; for scrolling
 
 ; ==================================================================
 
@@ -42,7 +41,7 @@ _start:
 	mov es, ax
 
 	; program begins
-	call clr_scr
+	call clr_scr2
 	mov dx, message_msg
 	call print
 	call beep
@@ -117,7 +116,8 @@ gput:
 
 clr_ln:
 	mov ah, 02h
-	xor dx, dx
+	mov dh, byte [ypos]
+	mov dl, 0
 	int 10h
 .loop:
 	mov al, 20h
@@ -131,7 +131,7 @@ clr_ln:
 	ret
 
 ; scroll screen down
-scr_scrl:
+scroll:
 	mov byte [xpos2], 0
 	mov byte [ypos2], 0
 	call mvcur2
@@ -145,7 +145,7 @@ scr_scrl:
 	mov byte [xpos2], 0
 	inc byte [ypos2]
 	call mvcur2
-	mov al, byte [height]
+	mov al, byte [ypos]
 	cmp byte [ypos2], al
 	jl .loop
 	call clr_ln
@@ -176,7 +176,7 @@ print:
 	mov al, byte [height]
 	cmp byte [ypos], al
 	jl .loop
-	call scr_scrl
+	call scroll
 	jmp short .loop
 .done:
 	ret
@@ -275,7 +275,37 @@ beep:
 	pop ax
 	ret
 
-; clear screen
+; clear full screen
+clr_scr2:
+	xor dx, dx
+	call set_cur
+.loop:
+	mov al, 20h
+	call putc
+	inc dl
+	call set_cur
+	cmp dl, byte [width]
+	jl .loop
+	mov al, 20h
+	call putc
+	mov dl, 0
+	inc dh
+	call set_cur
+	mov al, byte [height]
+	add al, 1
+	cmp dh, al
+	jl .loop
+	xor dx, dx
+	call set_cur
+	ret
+
+; set cursor position
+set_cur:
+	mov ah, 02h
+	int 10h
+	ret
+
+; clear shell screen
 clr_scr:
 	mov byte [xpos], 0
 	mov byte [ypos], 0
@@ -336,7 +366,7 @@ shell:
 	push 0000h
 	retf
 .exit:
-	call clr_scr
+	call clr_scr2
 	mov dx, close_msg
 	call print
 	ret
