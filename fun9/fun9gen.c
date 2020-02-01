@@ -11,20 +11,22 @@ int process(FILE *fin, const char *name)
 
 	/* process file */
 	c = fgetc(fin);
-	errno = 0;
 	if(c != EOF)
-		printf("%s_msg:\n\tdb %s%xh", name, (c < 16 ? "0" : ""), c);
+		printf("%s_msg:\n\tdb %xh", name, c);
+	errno = 0;
 	for(i = 1; (c = fgetc(fin)) != EOF && errno == 0; i++) {
-		if((i % 8) == 0) {
-			printf("\n\tdb %s%xh", (c < 16 ? "0" : ""), c);
-		} else if(c == '\n') {
+		if(c == '\n') {
 			printf(", 0dh, 0ah");
 			i++;
 		} else {
-			printf(", %s%xh", (c < 16 ? "0" : ""), c);
+			if((i % 8) == 0) {
+				printf("\n\tdb %s%xh", (c < 16 ? "0" : ""), c);
+			} else {
+				printf(", %s%xh", (c < 16 ? "0" : ""), c);
+			}
 		}
 	}
-	printf("\n\t db 24h\n");
+	printf(", 24h\n");
 	fclose(fin);
 	if(errno != 0) {
 		fprintf(stderr, "Error: %s\n", strerror(errno));

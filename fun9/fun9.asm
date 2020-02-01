@@ -2,16 +2,6 @@
 ; Simple command shell for MS-DOS and dosbox.
 ; Below are currently implemented for you.
 ; ==================================================================
-;  1. Exit command.
-;  2. Reboot command.
-;  3. Help command.
-; ==================================================================
-; Exercises below, greater the number the harder to exercise.
-; ==================================================================
-;  1. Implement version command.
-;  2. Add clear screen command, also clear screen for shell.
-;  3. Make text type out for version info (like typewriters do).
-; ==================================================================
 ; by 5n4k3
 ; ==================================================================
 
@@ -40,6 +30,7 @@ _start:
 	call clr_scr
 	mov dx, message_msg
 	call print
+	call beep
 	mov cx, 000fh
 	mov dx, 0a20h
 	call timer
@@ -135,6 +126,26 @@ clr_str:
 timer:
 	mov ah, 86h
 	int 15h
+	ret
+
+beep:
+	push ax
+	mov al, 182
+	out 43h, al
+	mov ax, 4560
+	out 42h, al
+	mov al, ah
+	out 42h, al
+	in al, 61h
+	or al, 00000011b
+	out 61h, al
+	mov cx, 0007h
+	mov dx, 0a20h
+	call timer
+	in al, 61h
+	and al, 11111100b
+	out 61h, al
+	pop ax
 	ret
 
 clr_scr:
