@@ -36,6 +36,12 @@ curln db 0			; for scrolling
 ; ==================================================================
 
 _start:
+	; setup segment registers, no need for stack as it's a COM file.
+	mov ax, cs
+	mov ds, ax
+	mov es, ax
+
+	; program begins
 	call clr_scr
 	mov dx, message_msg
 	call print
@@ -109,6 +115,21 @@ gput:
 	int 10h
 	ret
 
+clr_ln:
+	mov ah, 02h
+	xor dx, dx
+	int 10h
+.loop:
+	mov al, 20h
+	call putc
+	mov ah, 02h
+	inc dl
+	int 10h
+	cmp dl, byte [width]
+	jl .loop
+	call mvcur
+	ret
+
 ; scroll screen down
 scr_scrl:
 	mov byte [xpos2], 0
@@ -127,7 +148,7 @@ scr_scrl:
 	mov al, byte [height]
 	cmp byte [ypos2], al
 	jl .loop
-	call mvcur
+	call clr_ln
 	ret
 
 ; put message in dx
@@ -315,6 +336,7 @@ shell:
 	push 0000h
 	retf
 .exit:
+	call clr_scr
 	mov dx, close_msg
 	call print
 	ret
