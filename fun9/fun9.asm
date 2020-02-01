@@ -1,6 +1,6 @@
 ; ==================================================================
-; Simple command shell for MS-DOS and dosbox.
-; Below are currently implemented for you.
+; Simple command shell for MS-DOS and dosbox in color, using BIOS
+; video interrupt and function 09h.
 ; ==================================================================
 ; by 5n4k3
 ; ==================================================================
