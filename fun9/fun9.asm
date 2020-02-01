@@ -24,11 +24,13 @@ bad_cmd db "Bad command.",0dh,0ah,24h
 prompt db "> ",24h
 wait_msg db "Press any key to continue . . .",0dh,0ah,24h
 crlf_msg db 0dh,0ah,24h
-color db 1eh
-width db 4fh
-height db 18h
-xpos db 0
-ypos db 0
+color db 1eh		; back/fore ground color
+width db 4fh		; screen width
+height db 18h		; screen height
+xpos db 0			; for mvcur
+ypos db 0			; for mvcur
+xpos2 db 0			; for scrolling
+ypos2 db 0			; for scrolling
 
 ; ==================================================================
 
@@ -60,11 +62,59 @@ putc:
 	ret
 
 mvcur:
+	mov al, byte [height]
+	cmp byte [ypos], al
+	jl .done
+	mov al, byte [height]
+	mov byte [ypos], al
+.done:
 	mov ah, 02h
 	mov bh, 00h
 	mov dh, byte [ypos]
 	mov dl, byte [xpos]
 	int 10h
+	ret
+
+mvcur2:
+	mov al, byte [height]
+	cmp byte [ypos2], al
+	jl .done
+	mov al, byte [height]
+	mov byte [ypos2], al
+.done:
+	mov ah, 02h
+	mov bh, 00h
+	mov dh, byte [ypos2]
+	mov dl, byte [xpos2]
+	int 10h
+	ret
+
+; scroll screen down
+scr_scrl:
+	mov byte [xpos2], 0
+	mov byte [ypos2], 0
+	call mvcur2
+.loop:
+	inc byte [ypos2]
+	call mvcur2
+	mov ah, 08h
+	mov bh, 00h
+	int 10h
+	push ax
+	dec byte [ypos2]
+	call mvcur2
+	pop ax
+	mov bl, ah
+	mov ah, 09h
+	mov bh, 00h
+	mov cx, 0001h
+	int 10h
+	inc byte [xpos2]
+	call mvcur2
+	mov al, byte [width]
+	cmp byte [xpos2], al
+	jl .loop
+	call mvcur
 	ret
 
 ; put message in dx
@@ -89,6 +139,10 @@ print:
 .lf:
 	inc byte [ypos]
 	call mvcur
+	mov al, byte [height]
+	cmp byte [ypos], al
+	jl .loop
+	call scr_scrl
 	jmp short .loop
 .done:
 	ret
