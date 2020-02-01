@@ -31,6 +31,7 @@ xpos db 0			; for mvcur
 ypos db 0			; for mvcur
 xpos2 db 0			; for scrolling
 ypos2 db 0			; for scrolling
+curln db 0			; for scrolling
 
 ; ==================================================================
 
@@ -94,6 +95,7 @@ scr_scrl:
 	mov byte [xpos2], 0
 	mov byte [ypos2], 0
 	call mvcur2
+	xor dx, dx
 .loop:
 	inc byte [ypos2]
 	call mvcur2
@@ -101,8 +103,10 @@ scr_scrl:
 	mov bh, 00h
 	int 10h
 	push ax
-	dec byte [ypos2]
-	call mvcur2
+	mov ah, 02h
+	inc dh
+	mov dl, byte [xpos2]
+	int 10h
 	pop ax
 	mov bl, ah
 	mov ah, 09h
