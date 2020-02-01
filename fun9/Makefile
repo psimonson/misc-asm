@@ -24,4 +24,4 @@ copy: fun9gen fun9.com
 	cp fun9.com ${HOME}/dos
 
 clean:
-	rm -f *~ *.o $(TARGETS)
+	rm -f *~ *.o data.inc $(TARGETS)
