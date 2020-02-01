@@ -90,33 +90,42 @@ mvcur2:
 	int 10h
 	ret
 
-; scroll screen down
-scr_scrl:
-	mov byte [xpos2], 0
-	mov byte [ypos2], 0
-	call mvcur2
-	xor dx, dx
-.loop:
-	inc byte [ypos2]
-	call mvcur2
+gput:
 	mov ah, 08h
 	mov bh, 00h
 	int 10h
 	push ax
 	mov ah, 02h
-	inc dh
+	mov dh, byte [ypos2]
+	sub dh, 1
 	mov dl, byte [xpos2]
 	int 10h
 	pop ax
 	mov bl, ah
 	mov ah, 09h
 	mov bh, 00h
+	mov bl, byte [color]
 	mov cx, 0001h
 	int 10h
+	ret
+
+; scroll screen down
+scr_scrl:
+	mov byte [xpos2], 0
+	mov byte [ypos2], 0
+	call mvcur2
+.loop:
 	inc byte [xpos2]
 	call mvcur2
+	call gput
 	mov al, byte [width]
 	cmp byte [xpos2], al
+	jl .loop
+	mov byte [xpos2], 0
+	inc byte [ypos2]
+	call mvcur2
+	mov al, byte [height]
+	cmp byte [ypos2], al
 	jl .loop
 	call mvcur
 	ret
