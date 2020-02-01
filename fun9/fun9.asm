@@ -22,8 +22,11 @@ reboot_cmd db "reboot",24h
 exit_cmd db "exit",24h
 bad_cmd db "Bad command.",0dh,0ah,24h
 prompt db "> ",24h
+wait_msg db "Press any key to continue . . .",0dh,0ah,24h
 crlf_msg db 0dh,0ah,24h
 color db 1eh
+width db 4fh
+height db 18h
 xpos db 0
 ypos db 0
 
@@ -37,6 +40,10 @@ _start:
 	mov cx, 000fh
 	mov dx, 0a20h
 	call timer
+	mov dx, wait_msg
+	call print
+	xor ax, ax
+	int 16h
 	call shell
 	; return from COM file if reboot doesn't occur
 	int 20h
@@ -46,8 +53,8 @@ _start:
 ; put char in al
 putc:
 	mov ah, 09h
-	mov bx, 0000h
-	or bl, byte [color]
+	mov bh, 00h
+	mov bl, byte [color]
 	mov cx, 0001h
 	int 10h
 	ret
@@ -180,33 +187,30 @@ beep:
 	pop ax
 	ret
 
+; clear screen
 clr_scr:
-	mov ah, 02h
-	mov dx, 0
-	int 10h
+	mov byte [xpos], 0
+	mov byte [ypos], 0
+	call mvcur
 .loop:
-	mov ah, 09h
-	mov bx, 001eh
-	mov cx, 0001h
-	int 10h
-	mov ah, 02h
-	inc dl
-	int 10h
-	cmp dl, 80
-	jl .loop
-	mov ah, 09h
 	mov al, 20h
-	mov bx, 001eh
-	mov cx, 0001h
-	int 10h
-	mov ah, 02h
-	mov dl, 0
-	inc dh
-	cmp dh, 25
+	call putc
+	inc byte [xpos]
+	call mvcur
+	mov al, byte [width]
+	cmp byte [xpos], al
 	jl .loop
-	mov ah, 02h
-	mov dx, 0
-	int 10h
+	mov al, 20h
+	call putc
+	mov byte [xpos], 0
+	inc byte [ypos]
+	call mvcur
+	mov al, byte [height]
+	cmp byte [ypos], al
+	jl .loop
+	mov byte [xpos], 0
+	mov byte [ypos], 0
+	call mvcur
 	ret
 
 shell:
