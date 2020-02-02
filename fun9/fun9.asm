@@ -82,12 +82,6 @@ mvcur:
 	ret
 
 mvcur2:
-	mov al, byte [height]
-	cmp byte [ypos2], al
-	jl .done
-	mov al, byte [height]
-	mov byte [ypos2], al
-.done:
 	mov ah, 02h
 	mov bh, 00h
 	mov dh, byte [ypos2]
@@ -147,6 +141,12 @@ scroll:
 	inc byte [ypos2]
 	call mvcur2
 	mov al, byte [height]
+	cmp byte [ypos2], al
+	jl .loop
+	mov byte [xpos2], 0
+	inc byte [ypos2]
+	call mvcur2
+	mov al, byte [ypos]
 	cmp byte [ypos2], al
 	jl .loop
 	call clr_ln
