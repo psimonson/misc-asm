@@ -44,6 +44,11 @@ crlf_msg db 0dh,0ah,24h
 ; ==================================================================
 
 _start:
+	; setup segments
+	mov ax, cs
+	mov ds, ax
+	mov es, ax
+
 	call shell
 	; return from COM file if reboot doesn't occur
 	int 20h

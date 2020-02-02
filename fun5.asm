@@ -14,6 +14,11 @@ foreground db 0eh
 welcome db "Welcome to the look of a commodore 64!",0dh,0ah,24h
 
 _start:
+	; setup segments
+	mov ax, cs
+	mov ds, ax
+	mov es, ax
+
 	call clr_scrn
 	mov dx, welcome
 	call prnt_str

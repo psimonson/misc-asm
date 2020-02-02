@@ -17,6 +17,11 @@ width db 80
 height db 25
 
 _start:
+	; setup segments
+	mov ax, cs
+	mov ds, ax
+	mov es, ax
+
 	call clr_scrn
 	mov dx, start_msg
 	call print

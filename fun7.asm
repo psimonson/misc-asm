@@ -22,6 +22,11 @@ hello_msg db "Hello user, this is a test...",0dh,0ah,24h
 ; ==================================================================
 
 _start:
+	; setup segments
+	mov ax, cs
+	mov ds, ax
+	mov es, ax
+
 	; make some noise
 	mov ax, 4560
 	mov cx, 7

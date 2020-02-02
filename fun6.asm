@@ -14,6 +14,11 @@ jmp short _start
 ; ==================================================================
 
 _start:
+	; setup segments
+	mov ax, cs
+	mov ds, ax
+	mov es, ax
+
 	call beep			; call beep function
 	int 20h				; exit to DOS
 

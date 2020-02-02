@@ -14,6 +14,11 @@ crlf_msg db 0dh,0ah,24h
 ; =================== End again =============================
 
 _start:
+	; setup segments
+	mov ax, cs
+	mov ds, ax
+	mov es, ax
+
 	mov dx, hello_msg
 	call print
 	mov ax, 00ffh
