@@ -116,7 +116,8 @@ gput:
 
 clr_ln:
 	mov ah, 02h
-	mov dh, byte [ypos]
+	mov dh, byte [ypos2]
+	sub dh, 1
 	mov dl, 0
 	int 10h
 .loop:
@@ -133,19 +134,19 @@ clr_ln:
 ; scroll screen down
 scroll:
 	mov byte [xpos2], 0
-	mov byte [ypos2], 0
+	mov byte [ypos2], 1
 	call mvcur2
 .loop:
+	call gput
 	inc byte [xpos2]
 	call mvcur2
-	call gput
 	mov al, byte [width]
 	cmp byte [xpos2], al
 	jl .loop
 	mov byte [xpos2], 0
 	inc byte [ypos2]
 	call mvcur2
-	mov al, byte [ypos]
+	mov al, byte [height]
 	cmp byte [ypos2], al
 	jl .loop
 	call clr_ln
