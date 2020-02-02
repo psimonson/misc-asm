@@ -41,7 +41,7 @@ _start:
 	mov es, ax
 
 	; program begins
-	call clr_scr2
+	call clr_scr
 	mov dx, message_msg
 	call print
 	call beep
@@ -122,11 +122,12 @@ clr_ln:
 	int 10h
 	cmp dl, byte [width]
 	jl .loop
+	mov byte [xpos], 0
 	call mvcur
 	ret
 
 ; scroll screen down
-scroll:
+scroll_down:
 	mov byte [xpos2], 0
 	mov byte [ypos2], 1
 	call mvcur2
@@ -171,7 +172,7 @@ print:
 	mov al, byte [height]
 	cmp byte [ypos], al
 	jl .loop
-	call scroll
+	call scroll_down
 	jmp short .loop
 .done:
 	ret
@@ -271,7 +272,7 @@ beep:
 	ret
 
 ; clear full screen
-clr_scr2:
+clr_scr:
 	xor dx, dx
 	call set_cur
 .loop:
@@ -290,6 +291,9 @@ clr_scr2:
 	add al, 1
 	cmp dh, al
 	jl .loop
+	mov byte [xpos], 0
+	mov byte [ypos], 0
+	call mvcur
 	xor dx, dx
 	call set_cur
 	ret
@@ -298,32 +302,6 @@ clr_scr2:
 set_cur:
 	mov ah, 02h
 	int 10h
-	ret
-
-; clear shell screen
-clr_scr:
-	mov byte [xpos], 0
-	mov byte [ypos], 0
-	call mvcur
-.loop:
-	mov al, 20h
-	call putc
-	inc byte [xpos]
-	call mvcur
-	mov al, byte [width]
-	cmp byte [xpos], al
-	jl .loop
-	mov al, 20h
-	call putc
-	mov byte [xpos], 0
-	inc byte [ypos]
-	call mvcur
-	mov al, byte [height]
-	cmp byte [ypos], al
-	jl .loop
-	mov byte [xpos], 0
-	mov byte [ypos], 0
-	call mvcur
 	ret
 
 shell:
@@ -361,7 +339,7 @@ shell:
 	push 0000h
 	retf
 .exit:
-	call clr_scr2
+	call clr_scr
 	mov dx, close_msg
 	call print
 	ret
