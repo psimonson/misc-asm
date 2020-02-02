@@ -101,11 +101,7 @@ gput:
 	int 10h
 	pop ax
 	mov bl, ah
-	mov ah, 09h
-	mov bh, 00h
-	mov bl, byte [color]
-	mov cx, 0001h
-	int 10h
+	call putc
 	ret
 
 clr_ln:
