@@ -16,14 +16,16 @@ _start:
 	mov ds, ax
 	mov es, ax
 
+	; print message
 	mov dx, hello_msg
 	call print
+
+	; get key then quit to DOS
+	xor ax, ax
+	int 16h
 	int 20h
 
 print:
-	push ax
-	push bx
-	push dx
 	mov si, dx
 	mov cx, 0
 .loop:
@@ -38,8 +40,6 @@ print:
 	inc cx
 	jmp .loop
 .done:
-	pop dx
-	pop bx
-	pop ax
+	pop cx
 	ret
 

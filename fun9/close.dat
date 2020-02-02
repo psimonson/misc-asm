@@ -1,1 +1,15 @@
-Temporary for testing build.
+==============================================================================
+=       *** Shell Program V1.0 - by Philip R. Simonson (aka 5n4k3) ***       =
+==============================================================================
+  Thanks for using my simple shell program. If you find any other bugs than
+the "blank line" bug. Please report them to me some way. Right now the only
+bug that exists, or that I've found is the "blank line" bug. If you can find
+it please e-mail me or add a comment on this repository. In the mean time, I
+will try to find out why it happens and why it only happens one time. When
+you first start to scroll down is when it happens. If you want a minimal
+text editor for programming C or ASM, you can use my text editor if you like.
+As it's done for now, no copy-paste feature yet and only number syntax high-
+lighting. Will be making those features fully in the near future.
+==============================================================================
+=   T H A N K   Y O U   F O R   U S I N G   M Y   E X A M P L E S ! ! !      =
+==============================================================================
