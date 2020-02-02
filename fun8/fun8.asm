@@ -100,5 +100,4 @@ clr_scrn:
 	int 10h
 	ret
 
-%include "virmsg.inc"
-
+%include "data.inc"

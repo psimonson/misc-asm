@@ -5,44 +5,60 @@
 
 /* Convert to hex.
  */
-int process(FILE *fin)
+int process(FILE *fin, const char *name)
 {
 	int c, i;
 
 	/* process file */
 	c = fgetc(fin);
-	errno = 0;
 	if(c != EOF)
-		printf("virii_msg:\n\tdb %xh", c);
+		printf("%s_msg:\n\tdb %xh", name, c);
+	errno = 0;
 	for(i = 1; (c = fgetc(fin)) != EOF && errno == 0; i++) {
-		if((i % 8) == 0) {
-			printf("\n\tdb %s%xh", (c < 16 ? "0" : ""), c);
-		} else if(c == '\n') {
-			printf(", 0%xh, 0%xh", '\r', '\n');
+		if(c == '\n') {
+			printf(", 0dh, 0ah");
 			i++;
 		} else {
-			printf(", %s%xh", (c < 16 ? "0" : ""), c);
+			if((i % 8) == 0) {
+				printf("\n\tdb %s%xh", (c < 16 ? "0" : ""), c);
+			} else {
+				printf(", %s%xh", (c < 16 ? "0" : ""), c);
+			}
 		}
 	}
+	printf(", 24h\n");
 	fclose(fin);
 	if(errno != 0) {
 		fprintf(stderr, "Error: %s\n", strerror(errno));
 		return 1;
 	}
-	printf(", 24h\n");
 	return 0;
 }
 /* Program to create simple output for assembly program.
  */
-int main()
+int main(int argc, char **argv)
 {
 	FILE *fp;
-	if((fp = fopen("tmp.dat", "rt")) == NULL) {
-		fprintf(stderr, "Error: Cannot open file for reading.\n");
-		goto error_open;
+	int err = 0;
+	if(argc < 2) {
+		fprintf(stderr, "Usage: %s filename.ext [...]\n", argv[0]);
+		return 1;
 	}
-	return process(fp);
+	while(*++argv != NULL) {
+		char *p = strrchr(*argv, '.');
+		char buf[100];
+		memset(buf, 0, sizeof(buf));
+		if(p == NULL) continue;
+		memcpy(buf, *argv, p-(*argv));
+		buf[p-(*argv)] = '\0';
+		if((fp = fopen(*argv, "rt")) == NULL) {
+			fprintf(stderr, "Error: Cannot open file for reading.\n");
+			err++;
+			goto error;
+		}
+		err += process(fp, buf);
+	}
 	
-error_open:
-	return 1;
+error:
+	return err;
 }

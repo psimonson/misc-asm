@@ -9,6 +9,8 @@ DOSDIR=/home/philip/dos
 
 .PHONY: all clean
 all: $(TARGETS)
+	cd fun8 && $(MAKE)
+	cd fun9 && $(MAKE)
 
 %.c.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
@@ -18,6 +20,10 @@ all: $(TARGETS)
 
 copy: all
 	cp $(TARGETS) $(DOSDIR)
+	cd fun8 && $(MAKE) copy
+	cd fun9 && $(MAKE) copy
 
 clean:
 	rm -f *~ *.o $(TARGETS)
+	cd fun8 && $(MAKE) clean
+	cd fun9 && $(MAKE) clean

@@ -1,8 +1,12 @@
 =================================================
 =           Miscellaneous Assembler             =
 =================================================
-To assemble for MS-DOS or dosbox.
-# nasm -f bin -o prog.com prog.asm
+To compile and assemble for MS-DOS or dosbox.
+# make
+To install into /home/${LOGNAME}/dos type.
+# make copy
+Then type this to run dosbox.
+# dosbox
 =================================================
 NOTE: Where "prog" is is the name of the source
 file (e.g. fun, fun2, fun3, etc.).
