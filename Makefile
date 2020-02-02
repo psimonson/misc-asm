@@ -5,7 +5,6 @@ ASM=nasm
 AFLAGS=-f bin
 ASRC=$(wildcard *.asm)
 TARGETS=$(ASRC:%.asm=%.com)
-DOSDIR=/home/philip/dos
 
 .PHONY: all clean
 all: $(TARGETS)
@@ -19,7 +18,8 @@ all: $(TARGETS)
 	$(ASM) $(AFLAGS) -o $@ $<
 
 copy: all
-	cp $(TARGETS) $(DOSDIR)
+	@[ -d "${HOME}/dos" ] && mkdir ${HOME}/dos || echo "${HOME}/dos exists."
+	cp $(TARGETS) ${HOME}/dos
 	cd fun8 && $(MAKE) copy
 	cd fun9 && $(MAKE) copy
 
