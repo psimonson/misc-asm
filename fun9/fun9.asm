@@ -140,15 +140,9 @@ scroll:
 	mov byte [xpos2], 0
 	inc byte [ypos2]
 	call mvcur2
-	mov al, byte [height]
-	cmp byte [ypos2], al
-	jl .loop
-	mov byte [xpos2], 0
-	inc byte [ypos2]
-	call mvcur2
-	mov al, byte [ypos]
-	cmp byte [ypos2], al
-	jl .loop
+	mov al, byte [ypos2]
+	cmp byte [ypos], al
+	jge .loop
 	call clr_ln
 	ret
 
