@@ -105,21 +105,18 @@ gput:
 	ret
 
 clr_ln:
-	mov ah, 02h
-	mov dh, byte [ypos2]
-	sub dh, 1
-	mov dl, 0
-	int 10h
+	sub byte [ypos2], 1
+	call mvcur2
 .loop:
 	mov al, 20h
 	call putc
 	mov ah, 02h
-	inc dl
-	int 10h
+	inc byte [xpos2]
+	call mvcur2
 	cmp dl, byte [width]
 	jl .loop
-	mov byte [xpos], 0
-	call mvcur
+	mov byte [xpos2], 0
+	call mvcur2
 	ret
 
 ; scroll screen down
