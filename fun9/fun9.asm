@@ -105,18 +105,23 @@ gput:
 	ret
 
 clr_ln:
-	sub byte [ypos2], 1
-	call mvcur2
+	mov ah, 02h
+	mov dh, byte [ypos2]
+	dec dh
+	mov dl, 0
+	int 10h
 .loop:
 	mov al, 20h
 	call putc
 	mov ah, 02h
-	inc byte [xpos2]
-	call mvcur2
+	inc dl
+	int 10h
 	cmp dl, byte [width]
 	jl .loop
-	mov byte [xpos2], 0
-	call mvcur2
+	mov ah, 02h
+	inc dh
+	mov dl, 0
+	int 10h
 	ret
 
 ; scroll screen down
@@ -124,6 +129,7 @@ scroll_down:
 	mov byte [xpos2], 0
 	mov byte [ypos2], 1
 	call mvcur2
+	call clr_ln
 .loop:
 	call gput
 	inc byte [xpos2]
@@ -189,7 +195,9 @@ cmp_str:
 
 get_str:
 	mov di, buffer
+	mov cx, 0
 .loop:
+	push cx
 	xor ax, ax
 	int 16h
 	cmp al, 08h
@@ -200,8 +208,22 @@ get_str:
 	mov bx, 7
 	int 10h
 	stosb
-	jmp short .loop
+	pop cx
+	inc cx
+	cmp cx, 31
+	jle .loop
+.done:
+	mov al, 24h
+	stosb
+	mov dx, crlf_msg
+	call print
+	pop cx
+	ret
 .back:
+	pop cx
+	cmp cx, 0
+	jle .loop
+	push cx
 	mov ah, 0eh
 	mov al, 08h
 	mov bx, 0007h
@@ -217,15 +239,11 @@ get_str:
 	mov bx, 0007h
 	mov cx, 0001h
 	int 10h
+	pop cx
+	dec cx
 	dec di
 	mov byte [di], 24h
 	jmp short .loop
-.done:
-	mov al, 24h
-	stosb
-	mov dx, crlf_msg
-	call print
-	ret
 
 clr_str:
 	mov di, buffer
