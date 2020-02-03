@@ -3,13 +3,29 @@
 =================================================
 To compile and assemble for MS-DOS or dosbox.
 # make
-To install into /home/${LOGNAME}/dos type.
+To compile and copy into ${HOME}/dos type for
+dosbox.
 # make copy
-Then type this to run dosbox.
-# dosbox
 =================================================
-NOTE: Where "prog" is is the name of the source
-file (e.g. fun, fun2, fun3, etc.).
+=               dosbox startup                  =
+=================================================
+[autoexec]
+@mount c /home/<username>/dos
+=================================================
+NOTE: Enter your user name in place of <username>
+or you will get an error from dosbox.
+=================================================
+=                 Run dosbox                    =
+=================================================
+Finally type this to run dosbox.
+# dosbox
+In dosbox type:
+C:\>C: [Return]
+C:\>fun-fun9 [Return]
+=================================================
+NOTE: The hyphen means enter fun through fun9.
+That will run a program. Just in-case you didn't
+know how to use dosbox.
 =================================================
 fun.asm - Simple DOS interrupt example for string
           printing.
@@ -35,6 +51,9 @@ fun8.asm - Simple example of a fake virus, kind
            of funny actually. But lets you know
            immediately that it's fake NOT a real
            virus.
+
+fun9.asm - Simple example of a working shell in
+           color. Using text mode 80x25.
 =================================================
 =            by Philip R. Simonson              =
 =================================================
