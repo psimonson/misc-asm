@@ -92,17 +92,13 @@ mvcur:
 	ret
 
 mvcur2:
-	push ax
-	push bx
-	push dx
+	pusha
 	mov ah, 02h
 	mov bh, 00h
 	mov dh, byte [ypos2]
 	mov dl, byte [xpos2]
 	int 10h
-	pop dx
-	pop bx
-	pop ax
+	popa
 	ret
 
 gput:
@@ -123,7 +119,7 @@ gput:
 clr_ln:
 	mov ah, 02h
 	mov dh, byte [ypos2]
-	dec dh
+	sub dh, 1
 	mov dl, 0
 	int 10h
 .loop:
