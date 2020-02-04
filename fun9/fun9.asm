@@ -72,9 +72,7 @@ putc:
 	ret
 
 mvcur:
-	push ax
-	push bx
-	push dx
+	pusha
 	mov al, byte [height]
 	cmp byte [ypos], al
 	jl .done
@@ -86,9 +84,7 @@ mvcur:
 	mov dh, byte [ypos]
 	mov dl, byte [xpos]
 	int 10h
-	pop dx
-	pop bx
-	pop ax
+	popa
 	ret
 
 mvcur2:
