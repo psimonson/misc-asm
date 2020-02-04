@@ -2,6 +2,8 @@
 =             *** Help ***             =
 ========================================
 = exit    - exit the shell program.    =
+= cls     - clears the screen.         =
 = reboot  - warm reboot the machine.   =
+= version - displays the version.      =
 = help    - displays this message.     =
 ========================================

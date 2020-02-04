@@ -18,7 +18,7 @@ fun9gen: fun9gen.c.o
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 fun9build: fun9gen
-	./fun9gen message.dat close.dat help.dat > data.inc
+	./fun9gen message.dat close.dat version.dat help.dat > data.inc
 
 copy: fun9gen fun9.com
 	cp fun9.com ${HOME}/dos

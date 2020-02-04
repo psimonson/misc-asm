@@ -19,7 +19,9 @@ jmp _start
 reboot_msg db "Press any key to reboot . . .",0dh,0ah,24h
 help_cmd db "help",24h
 reboot_cmd db "reboot",24h
+clr_cmd db "cls",24h
 exit_cmd db "exit",24h
+ver_cmd db "version",24h
 bad_cmd db "Bad command.",0dh,0ah,24h
 prompt db "> ",24h
 wait_msg db "Press any key to continue . . .",0dh,0ah,24h
@@ -44,10 +46,10 @@ _start:
 	call clr_scr
 	mov dx, message_msg
 	call print
-	call beep
-	mov cx, 000fh
+	mov ax, 4560
+	mov cx, 7
 	mov dx, 0a20h
-	call timer
+	call beep
 	mov dx, wait_msg
 	call print
 	xor ax, ax
@@ -60,14 +62,19 @@ _start:
 
 ; put char in al
 putc:
+	push ax
 	mov ah, 09h
 	mov bh, 00h
 	mov bl, byte [color]
 	mov cx, 0001h
 	int 10h
+	pop ax
 	ret
 
 mvcur:
+	push ax
+	push bx
+	push dx
 	mov al, byte [height]
 	cmp byte [ypos], al
 	jl .done
@@ -79,14 +86,23 @@ mvcur:
 	mov dh, byte [ypos]
 	mov dl, byte [xpos]
 	int 10h
+	pop dx
+	pop bx
+	pop ax
 	ret
 
 mvcur2:
+	push ax
+	push bx
+	push dx
 	mov ah, 02h
 	mov bh, 00h
 	mov dh, byte [ypos2]
 	mov dl, byte [xpos2]
 	int 10h
+	pop dx
+	pop bx
+	pop ax
 	ret
 
 gput:
@@ -146,6 +162,53 @@ scroll_down:
 	call clr_ln
 	ret
 
+; put message in dx
+typer:
+	push ax
+	push bx
+	push cx
+	push dx
+	mov si, dx
+.loop:
+	lodsb
+	cmp al, 24h
+	je .done
+	cmp al, 0ah
+	je .cr
+	cmp al, 0dh
+	je .lf
+	call putc
+	inc byte [xpos]
+	call mvcur
+	cmp al, 20h
+	je .loop
+	mov ax, 2560
+	mov cx, 1
+	mov dx, 07feh
+	call beep
+	mov cx, 1
+	mov dx, 05a0h
+	call timer
+	jmp short .loop
+.cr:
+	mov byte [xpos], 0
+	call mvcur
+	jmp short .loop
+.lf:
+	inc byte [ypos]
+	call mvcur
+	mov al, byte [height]
+	cmp byte [ypos], al
+	jl .loop
+	call scroll_down
+	jmp short .loop
+.done:
+	pop dx
+	pop cx
+	pop bx
+	pop ax
+	ret
+	
 ; put message in dx
 print:
 	mov si, dx
@@ -262,24 +325,29 @@ timer:
 	int 15h
 	ret
 
+; beep pc speaker
+; ax = freq
+; cx = high timer
+; dx = low timer
 beep:
+	push dx
+	push cx
 	push ax
 	mov al, 182
 	out 43h, al
-	mov ax, 4560
+	pop ax
 	out 42h, al
 	mov al, ah
 	out 42h, al
 	in al, 61h
 	or al, 00000011b
 	out 61h, al
-	mov cx, 0007h
-	mov dx, 0a20h
+	pop cx
+	pop dx
 	call timer
 	in al, 61h
 	and al, 11111100b
 	out 61h, al
-	pop ax
 	ret
 
 ; clear full screen
@@ -332,12 +400,30 @@ shell:
 	mov di, exit_cmd
 	call cmp_str
 	jnc .exit
+	mov si, buffer
+	mov di, clr_cmd
+	call cmp_str
+	jnc .cls
+	mov si, buffer
+	mov di, ver_cmd
+	call cmp_str
+	jnc .version
 	mov dx, bad_cmd
 	call print
 	jmp short shell
 .help:
 	mov dx, help_msg
 	call print
+	jmp short shell
+.cls:
+	call clr_scr
+	mov byte [xpos], 0
+	mov byte [ypos], 0
+	call mvcur
+	jmp short shell
+.version:
+	mov dx, version_msg
+	call typer
 	jmp short shell
 .reboot:
 	mov dx, reboot_msg
