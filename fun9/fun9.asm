@@ -8,8 +8,12 @@
 [bits 16]
 [org 100h]
 [section .bss]
+
+; input buffer for get_str
 buffer resb 32
+
 [section .text]
+
 global _start
 jmp _start
 
@@ -156,10 +160,7 @@ scroll_down:
 
 ; put message in dx
 typer:
-	push ax
-	push bx
-	push cx
-	push dx
+	pusha
 	mov si, dx
 .loop:
 	lodsb
@@ -195,14 +196,12 @@ typer:
 	call scroll_down
 	jmp short .loop
 .done:
-	pop dx
-	pop cx
-	pop bx
-	pop ax
+	popa
 	ret
 	
 ; put message in dx
 print:
+	pusha
 	mov si, dx
 .loop:
 	lodsb
@@ -229,10 +228,12 @@ print:
 	call scroll_down
 	jmp short .loop
 .done:
+	popa
 	ret
 
 ; put command in di
 cmp_str:
+	pusha
 	clc
 .loop:
 	lodsb
@@ -246,6 +247,7 @@ cmp_str:
 .fail:
 	stc
 .done:
+	popa
 	ret
 
 get_str:
