@@ -122,7 +122,7 @@ reverse:
 ; ========================================
 ; ax - number to convert.
 ; bx - memory size.
-; di - string to store to.
+; si - string to store to.
 itoa:
 	pusha
 	call clrmem
@@ -146,5 +146,78 @@ itoa:
 .done:
 	popa
 	call reverse
+	ret
+
+; =======================================
+; ax - number to convert to hex string.
+; cx - size of memory location.
+; [ds:si] - location to store hex digits.
+itoh:
+	push ax
+	push bx
+	push cx
+	push dx
+	push si
+	xor bx, bx
+.loop:
+	mov dx, ax
+	and dx, 0xf000
+	shr dx, 4
+	add dh, 0x30
+	cmp dh, 0x39
+	jg .add
+.store:
+	mov byte [si+bx], dh
+	inc bx
+	shl ax, 4
+	cmp bx, cx
+	jl .loop
+	jmp .done
+.add:
+	add dh, 0x07
+	jmp .store
+.done:
+	pop si
+	pop dx
+	pop cx
+	pop bx
+	pop ax
+	ret
+
+; =====================================
+; eax - number to convert.
+; ecx - size of memory.
+; esi - location to store.
+itoh32:
+	push eax
+	push ebx
+	push ecx
+	push edx
+	push esi
+	xor ebx, ebx
+.loop:
+	mov edx, eax
+	and edx, 0xf0000000
+	shr edx, 4
+	rol edx, 16
+	add dh, 0x30
+	cmp dh, 0x39
+	jg .add
+.store:
+	mov byte [esi+ebx], dh
+	inc ebx
+	shl eax, 4
+	cmp ebx, ecx
+	jnz .loop
+	jmp .done
+.add:
+	add dh, 0x07
+	jmp .store
+.done:
+	pop esi
+	pop edx
+	pop ecx
+	pop ebx
+	pop eax
 	ret
 
